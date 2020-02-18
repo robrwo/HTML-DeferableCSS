@@ -14,7 +14,9 @@ use Path::Tiny;
 use Types::Path::Tiny qw/ Dir File Path /;
 use Types::Common::Numeric qw/ PositiveOrZeroInt /;
 use Types::Common::String qw/ NonEmptySimpleStr SimpleStr /;
-use Types::Standard qw/ Bool CodeRef HashRef Tuple /;
+use Types::Standard qw/ Bool CodeRef HashRef Maybe Tuple /;
+use Types::URI qw/ Uri /;
+use URI;
 
 # RECOMMEND PREREQ: Type::Tiny::XS
 
@@ -108,7 +110,7 @@ has prefer_min => (
 has css_files => (
     is  => 'lazy',
     isa => STRICT
-             ? HashRef [ Tuple [ Path, Path, PositiveOrZeroInt ] ]
+             ? HashRef [ Tuple [ Maybe[Path], Path | URI, PositiveOrZeroInt ] ]
              : HashRef,
     builder => 1,
     coerce  => 1,
@@ -123,15 +125,20 @@ sub _build_css_files {
     my %files;
     for my $name (keys %{ $self->aliases }) {
         my $base  = $self->aliases->{$name};
-        my @bases = ( $base );
-        unshift @bases, "${base}.css" unless $base =~ /\.css$/;
-        unshift @bases, "${base}.min.css" unless $min || $base =~ /\.min\.css$/;
-        my $file = first { $_->exists } map { path( $root, $_ ) } @bases;
-        unless ($file) {
-            croak "alias '$name' refers to a non-existent file";
+        if ($base =~ m{^(\w+:)?//}) {
+            $files{$name} = [ undef, URI->new($base), 0 ];
         }
-        # PATH NAME SIZE
-        $files{$name} = [ $file, $file->relative($root), $file->stat->size ];
+        else {
+            my @bases = ( $base );
+            unshift @bases, "${base}.css" unless $base =~ /\.css$/;
+            unshift @bases, "${base}.min.css" unless $min || $base =~ /\.min\.css$/;
+            my $file = first { $_->exists } map { path( $root, $_ ) } @bases;
+            unless ($file) {
+                croak "alias '$name' refers to a non-existent file";
+            }
+            # PATH NAME SIZE
+            $files{$name} = [ $file, $file->relative($root), $file->stat->size ];
+        }
     }
 
     return \%files;
@@ -139,7 +146,7 @@ sub _build_css_files {
 
 has cdn_links => (
     is        => 'ro',
-    isa       => STRICT ? HashRef [NonEmptySimpleStr] : HashRef,
+    isa       => STRICT ? HashRef [Uri] : HashRef,
     predicate => 1,
 );
 
@@ -204,12 +211,17 @@ sub href {
     croak "missing name" unless defined $name;
     $file //= $self->css_files->{$name};
     croak "invalid name '$name'" unless defined $file;
-    my $href = $self->url_base_path . $file->[NAME]->stringify;
-    $href .= '?' . $self->asset_id if $self->has_asset_id;
-    if ($self->use_cdn_links && $self->has_cdn_links) {
-        return $self->cdn_links->{$name} // $href;
+    if (defined $file->[PATH]) {
+        my $href = $self->url_base_path . $file->[NAME]->stringify;
+        $href .= '?' . $self->asset_id if $self->has_asset_id;
+        if ($self->use_cdn_links && $self->has_cdn_links) {
+            return $self->cdn_links->{$name} // $href;
+        }
+        return $href;
     }
-    return $href;
+    else {
+        return $file->[NAME];
+    }
 }
 
 sub link_html {
@@ -222,7 +234,12 @@ sub inline_html {
     croak "missing name" unless defined $name;
     $file //= $self->css_files->{$name};
     croak "invalid name '$name'" unless defined $file;
-    return "<style>" . $file->[PATH]->slurp_raw . "</style>";
+    if (my $path = $file->[PATH]) {
+        return "<style>" . $file->[PATH]->slurp_raw . "</style>";
+    }
+    else {
+        croak "'$name' refers to a URI";
+    }
 }
 
 sub link_or_inline_html {

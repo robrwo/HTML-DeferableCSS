@@ -120,4 +120,46 @@ subtest "css_files (bad filename)" => sub {
 
 };
 
+subtest "css_files (URI)" => sub {
+
+    my $css = HTML::DeferableCSS->new(
+        css_root => 't/etc/css',
+        aliases  => {
+            reset => 'http://cdn.example.com/reset.css',
+        },
+    );
+
+    isa_ok $css, 'HTML::DeferableCSS';
+
+    my $files = $css->css_files;
+
+    cmp_deeply $files, {
+        reset => [ undef, obj_isa('URI'), ignore() ],
+    }, "css_files";
+
+    is $files->{reset}->[1]->as_string => "http://cdn.example.com/reset.css", "uri";
+
+};
+
+subtest "css_files (URI)" => sub {
+
+    my $css = HTML::DeferableCSS->new(
+        css_root => 't/etc/css',
+        aliases  => {
+            reset => '//cdn.example.com/reset.css',
+        },
+    );
+
+    isa_ok $css, 'HTML::DeferableCSS';
+
+    my $files = $css->css_files;
+
+    cmp_deeply $files, {
+        reset => [ undef, obj_isa('URI'), ignore() ],
+    }, "css_files";
+
+    is $files->{reset}->[1]->as_string => "//cdn.example.com/reset.css", "uri";
+
+};
+
 done_testing;

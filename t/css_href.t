@@ -22,6 +22,28 @@ subtest "css_href" => sub {
 
 };
 
+subtest "css_href (URL)" => sub {
+
+    my $url = 'http://cdn.example.com/reset.css';
+
+    my $css = HTML::DeferableCSS->new(
+        css_root => 't/etc/css',
+        aliases  => {
+            reset => $url,
+        },
+        url_base_path => '/css/',
+    );
+
+    isa_ok $css, 'HTML::DeferableCSS';
+
+    is $css->href('reset'), $url;
+
+    is $css->link_html('reset'),
+        qq{<link rel="stylesheet" href="$url">},
+        "link_html";
+
+};
+
 subtest "css_href with asset_id" => sub {
 
     my $css = HTML::DeferableCSS->new(
