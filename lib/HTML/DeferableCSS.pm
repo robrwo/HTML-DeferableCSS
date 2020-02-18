@@ -193,12 +193,19 @@ has preload_template => (
     },
 );
 
+has asset_id => (
+    is        => 'ro',
+    isa       => NonEmptySimpleStr,
+    predicate => 1,
+);
+
 sub href {
     my ($self, $name, $file) = @_;
     croak "missing name" unless defined $name;
     $file //= $self->css_files->{$name};
     croak "invalid name '$name'" unless defined $file;
     my $href = $self->url_base_path . $file->[NAME]->stringify;
+    $href .= '?' . $self->asset_id if $self->has_asset_id;
     if ($self->use_cdn_links && $self->has_cdn_links) {
         return $self->cdn_links->{$name} // $href;
     }

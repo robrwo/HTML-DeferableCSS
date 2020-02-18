@@ -22,6 +22,27 @@ subtest "css_href" => sub {
 
 };
 
+subtest "css_href with asset_id" => sub {
+
+    my $css = HTML::DeferableCSS->new(
+        css_root => 't/etc/css',
+        asset_id => 'v2',
+        aliases  => {
+            reset => 'reset',
+        },
+        url_base_path => '/css/',
+    );
+
+    isa_ok $css, 'HTML::DeferableCSS';
+
+    is $css->href('reset'), '/css/reset.min.css?v2';
+
+    is $css->link_html('reset'),
+        '<link rel="stylesheet" href="/css/reset.min.css?v2">',
+        "link_html";
+
+};
+
 subtest "css_href with cdn_links" => sub {
 
     my $href = '//cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css';
