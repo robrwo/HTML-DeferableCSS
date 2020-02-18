@@ -113,6 +113,14 @@ has link_template => (
     },
 );
 
+has preload_template => (
+    is      => 'ro',
+    isa     => CodeRef,
+    builder => sub {
+        return sub { sprintf('<link rel="preload" as="style" href="%s" onload="this.onload=null;this.rel=\'stylesheet\'">', @_) },
+    },
+);
+
 sub href {
     my ($self, $name, $file) = @_;
     croak "missing name" unless defined $name;
@@ -163,7 +171,7 @@ sub deferred_link_html {
         elsif ($self->defer_css) {
             my $href = $self->href($name, $file);
             push @deferred, $href;
-            $buffer .= sprintf('<link rel="preload" as="style" href="%s" onload="this.onload=null;this.rel=\'stylesheet\'">', $href);
+            $buffer .= $self->preload_template->($href);
         }
         else {
             $buffer .= $self->link_html($name, $file);
