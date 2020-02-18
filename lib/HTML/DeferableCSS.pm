@@ -4,13 +4,14 @@ use v5.10;
 use Moo;
 
 use Carp qw/ croak /;
+use File::ShareDir qw/ module_file /;
 use MooX::TypeTiny;
-use List::Util qw/ first /;
+use List::Util qw/ first uniqstr /;
 use Path::Tiny;
-use Types::Path::Tiny qw/ Dir Path /;
+use Types::Path::Tiny qw/ Dir File Path /;
 use Types::Common::Numeric qw/ PositiveOrZeroInt /;
 use Types::Common::String qw/ NonEmptySimpleStr SimpleStr /;
-use Types::Standard qw/ Bool HashRef Tuple /;
+use Types::Standard qw/ Bool CodeRef HashRef Tuple /;
 
 use namespace::autoclean;
 
@@ -89,6 +90,27 @@ has inline_max => (
     default => 1024,
 );
 
+has defer_css => (
+    is      => 'ro',
+    isa     => Bool,
+    default => 1,
+);
+
+has preload_script => (
+    is      => 'lazy',
+    isa     => File,
+    coerce  => 1,
+    builder => sub { module_file(__PACKAGE__, 'cssrelpreload.min.js') },
+);
+
+has link_template => (
+    is      => 'ro',
+    isa     => CodeRef,
+    builder => sub {
+        return sub { sprintf('<link rel="stylesheet" href="%s">', @_) },
+    },
+);
+
 sub href {
     my ($self, $name, $file) = @_;
     croak "missing name" unless defined $name;
@@ -103,8 +125,7 @@ sub href {
 
 sub link_html {
     my ( $self, $name, $file ) = @_;
-    return sprintf( '<link rel="stylesheet" href="%s">',
-        $self->href( $name, $file ) );
+    return $self->link_template->( $self->href( $name, $file ) );
 }
 
 sub inline_html {
@@ -128,6 +149,38 @@ sub link_or_inline_html {
     }
 }
 
+sub deferred_link_html {
+    my ($self, @names) = @_;
+    my $buffer = "";
+    my @deferred;
+    for my $name (uniqstr @names) {
+        my $file = $self->css_files->{$name} or croak "invalid name '$name'";
+        if ($file->[2] <= $self->inline_max) {
+            $buffer .= $self->inline_html($name, $file);
+        }
+        elsif ($self->defer_css) {
+            my $href = $self->href($name, $file);
+            push @deferred, $href;
+            $buffer .= sprintf('<link rel="preload" as="style" href="%s" onload="this.onload=null;this.rel=\'stylesheet\'">', $href);
+        }
+        else {
+            $buffer .= $self->link_html($name, $file);
+        }
+    }
+
+    if (@deferred) {
+
+        $buffer .= "<noscript>" .
+            join("", map { $self->link_template->($_) } @deferred ) .
+            "</noscript><script>" .
+            $self->preload_script->slurp_raw .
+            "</script>";
+
+    }
+
+    return $buffer;
+}
+
 =head1 KNOWN ISSUES
 
 =head2 XHTML Support
@@ -144,5 +197,7 @@ and scripts in CDATA sections.
 =head1 append:AUTHOR
 
 F<reset.css> comes from L<http://meyerweb.com/eric/tools/css/reset/>.
+
+F<cssrelpreload.js> comes from L<https://github.com/filamentgroup/loadCSS/>.
 
 =cut
