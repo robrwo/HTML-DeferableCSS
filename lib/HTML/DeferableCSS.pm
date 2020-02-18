@@ -1,5 +1,7 @@
 package HTML::DeferableCSS;
 
+# ABSTRACT: Simplify management of stylesheets in your HTML
+
 use v5.10;
 use Moo;
 
@@ -21,6 +23,62 @@ use namespace::autoclean;
 use constant PATH => 0;
 use constant NAME => 1;
 use constant SIZE => 2;
+
+=head1 SYNOPSIS
+
+  use HTML::DeferableCSS;
+
+  my $css = HTML::DeferableCSS->new(
+      css_root      => '/var/www/css',
+      url_base_path => '/css',
+      inline_max    => 512,
+      aliases => {
+        jqui  => 'jquery-ui',
+        site  => 'style',
+      },
+      cdn => {
+        jqui  => '//cdn.example.com/jquery-ui.min.css',
+      },
+  );
+
+  ...
+
+  print $css->deferred_link_html( qw[ jqui site ] );
+
+=head1 DESCRIPTION
+
+This module allows you to simplify the management of stylesheets for a
+web application, from development to production by
+
+=over
+
+=item *
+
+declaring all stylesheets used by your web application;
+
+=item *
+
+specifying remote aliases for stylesheets, e.g. from a CDN;
+
+=item *
+
+enable or disable the use of minified stylesheets;
+
+=item *
+
+switch between local copies of stylesheets or CDN versions;
+
+=item *
+
+automatically inline small stylesheets;
+
+=item *
+
+use deferred-loading stylesheets;
+
+=back
+
+=cut
 
 has aliases => (
     is       => 'ro',
