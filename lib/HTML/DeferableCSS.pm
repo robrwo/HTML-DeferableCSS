@@ -15,8 +15,9 @@ use Types::Standard qw/ Bool CodeRef HashRef Tuple /;
 
 use namespace::autoclean;
 
-use constant FILE => 0;
-use constant SIZE => 1;
+use constant PATH => 0;
+use constant NAME => 1;
+use constant SIZE => 2;
 
 has aliases => (
     is       => 'ro',
@@ -66,6 +67,7 @@ sub _build_css_files {
         unless ($file) {
             croak "alias '$name' refers to a non-existent file";
         }
+        # PATH NAME SIZE
         $files{$name} = [ $file, $file->relative($root), $file->stat->size ];
     }
 
@@ -116,7 +118,7 @@ sub href {
     croak "missing name" unless defined $name;
     $file //= $self->css_files->{$name};
     croak "invalid name '$name'" unless defined $file;
-    my $href = $self->url_base_path . $file->[1]->stringify;
+    my $href = $self->url_base_path . $file->[NAME]->stringify;
     if ($self->use_cdn_links && $self->has_cdn_links) {
         return $self->cdn_links->{$name} // $href;
     }
@@ -133,7 +135,7 @@ sub inline_html {
     croak "missing name" unless defined $name;
     $file //= $self->css_files->{$name};
     croak "invalid name '$name'" unless defined $file;
-    return "<style>" . $file->[0]->slurp_raw . "</style>";
+    return "<style>" . $file->[PATH]->slurp_raw . "</style>";
 }
 
 sub link_or_inline_html {
@@ -141,7 +143,7 @@ sub link_or_inline_html {
     croak "missing name" unless defined $name;
     my $file = $self->css_files->{$name};
     croak "invalid name '$name'" unless defined $file;
-    if ($file->[2] <= $self->inline_max) {
+    if ($file->[SIZE] <= $self->inline_max) {
         return $self->inline_html($name, $file);
     }
     else {
@@ -155,7 +157,7 @@ sub deferred_link_html {
     my @deferred;
     for my $name (uniqstr @names) {
         my $file = $self->css_files->{$name} or croak "invalid name '$name'";
-        if ($file->[2] <= $self->inline_max) {
+        if ($file->[SIZE] <= $self->inline_max) {
             $buffer .= $self->inline_html($name, $file);
         }
         elsif ($self->defer_css) {
