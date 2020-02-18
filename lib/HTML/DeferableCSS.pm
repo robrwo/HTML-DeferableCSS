@@ -83,6 +83,12 @@ has use_cdn_links => (
     builder => 'has_cdn_links',
 );
 
+has inline_max => (
+    is      => 'ro',
+    isa     => PositiveOrZeroInt,
+    default => 1024,
+);
+
 sub href {
     my ($self, $name, $file) = @_;
     croak "missing name" unless defined $name;
@@ -100,6 +106,38 @@ sub link_html {
     return sprintf( '<link rel="stylesheet" href="%s">',
         $self->href( $name, $file ) );
 }
+
+sub inline_html {
+    my ( $self, $name, $file ) = @_;
+    croak "missing name" unless defined $name;
+    $file //= $self->css_files->{$name};
+    croak "invalid name '$name'" unless defined $file;
+    return "<style>" . $file->[0]->slurp_raw . "</style>";
+}
+
+sub link_or_inline_html {
+    my ($self, $name ) = @_;
+    croak "missing name" unless defined $name;
+    my $file = $self->css_files->{$name};
+    croak "invalid name '$name'" unless defined $file;
+    if ($file->[2] <= $self->inline_max) {
+        return $self->inline_html($name, $file);
+    }
+    else {
+        return $self->link_html($name, $file);
+    }
+}
+
+=head1 KNOWN ISSUES
+
+=head2 XHTML Support
+
+This module is written for HTML5.
+
+It does not support XHTML self-closing elements or embedding styles
+and scripts in CDATA sections.
+
+=cut
 
 1;
 
