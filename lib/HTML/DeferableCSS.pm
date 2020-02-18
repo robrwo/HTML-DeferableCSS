@@ -14,6 +14,8 @@ use Types::Common::Numeric qw/ PositiveOrZeroInt /;
 use Types::Common::String qw/ NonEmptySimpleStr SimpleStr /;
 use Types::Standard qw/ Bool CodeRef HashRef Tuple /;
 
+# RECOMMEND PREREQ: Type::Tiny::XS
+
 use namespace::autoclean;
 
 use constant PATH => 0;
