@@ -132,7 +132,7 @@ sub _build_css_files {
             my @bases = ( $base );
             unshift @bases, "${base}.css" unless $base =~ /\.css$/;
             unshift @bases, "${base}.min.css" unless $min || $base =~ /\.min\.css$/;
-            my $file = first { $_->exists } map { path( $root, $_ ) } @bases;
+            my $file = first { $_->exists } path($base), map { path( $root, $_ ) } @bases;
             unless ($file) {
                 croak "alias '$name' refers to a non-existent file";
             }

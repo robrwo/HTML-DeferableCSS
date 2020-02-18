@@ -1,6 +1,7 @@
 use Test::Most;
 
 use HTML::DeferableCSS;
+use Path::Tiny;
 
 subtest "css_files" => sub {
 
@@ -20,6 +21,29 @@ subtest "css_files" => sub {
     }, "css_files";
 
     is $files->{reset}->[0]->stringify => "t/etc/css/reset.min.css", "filename";
+
+};
+
+subtest "css_files (absolute path)" => sub {
+
+    my $path = path('t/etc/css/reset.css')->absolute;
+
+    my $css = HTML::DeferableCSS->new(
+        css_root => 't/etc/css',
+        aliases  => {
+            reset => $path,
+        },
+    );
+
+    isa_ok $css, 'HTML::DeferableCSS';
+
+    my $files = $css->css_files;
+
+    cmp_deeply $files, {
+        reset => [ obj_isa('Path::Tiny'), obj_isa('Path::Tiny'), $path->stat->size ],
+    }, "css_files";
+
+    is $files->{reset}->[0]->stringify => $path, "filename";
 
 };
 
