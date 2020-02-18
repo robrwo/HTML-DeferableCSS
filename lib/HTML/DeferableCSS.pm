@@ -71,6 +71,35 @@ sub _build_css_files {
     return \%files;
 }
 
+has cdn_links => (
+    is        => 'ro',
+    isa       => HashRef [NonEmptySimpleStr],
+    predicate => 1,
+);
+
+has use_cdn_links => (
+    is      => 'lazy',
+    isa     => Bool,
+    builder => 'has_cdn_links',
+);
+
+sub href {
+    my ($self, $name) = @_;
+    croak "missing name" unless defined $name;
+    my $file = $self->css_files->{$name};
+    croak "invalid name '$name'" unless defined $file;
+    my $href = $self->url_base_path . $file->[1]->stringify;
+    if ($self->use_cdn_links && $self->has_cdn_links) {
+        return $self->cdn_links->{$name} // $href;
+    }
+    return $href;
+}
+
+sub link_html {
+    my ( $self, $name ) = @_;
+    return sprintf( '<link rel="stylesheet" href="%s">', $self->href($name) );
+}
+
 1;
 
 =head1 append:AUTHOR
