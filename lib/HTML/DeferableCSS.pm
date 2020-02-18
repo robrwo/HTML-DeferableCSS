@@ -98,6 +98,15 @@ has defer_css => (
     default => 1,
 );
 
+has include_noscript => (
+    is      => 'lazy',
+    isa     => Bool,
+    builder => sub {
+        my ($self) = @_;
+        return $self->defer_css;
+    },
+);
+
 has preload_script => (
     is      => 'lazy',
     isa     => File,
@@ -182,7 +191,9 @@ sub deferred_link_html {
 
         $buffer .= "<noscript>" .
             join("", map { $self->link_template->($_) } @deferred ) .
-            "</noscript><script>" .
+            "</noscript>" if $self->include_noscript;
+
+        $buffer .= "<script>" .
             $self->preload_script->slurp_raw .
             "</script>";
 
