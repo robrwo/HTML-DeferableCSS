@@ -4,6 +4,7 @@ use v5.10;
 use Moo;
 
 use Carp qw/ croak /;
+use Devel::StrictMode;
 use File::ShareDir qw/ module_file /;
 use MooX::TypeTiny;
 use List::Util qw/ first uniqstr /;
@@ -21,7 +22,7 @@ use constant SIZE => 2;
 
 has aliases => (
     is       => 'ro',
-    isa      => HashRef [NonEmptySimpleStr],
+    isa      => STRICT ? HashRef [NonEmptySimpleStr] : HashRef,
     required => 1,
 );
 
@@ -45,8 +46,10 @@ has prefer_min => (
 );
 
 has css_files => (
-    is      => 'lazy',
-    isa     => HashRef [ Tuple [ Path, Path, PositiveOrZeroInt ] ],
+    is  => 'lazy',
+    isa => STRICT
+             ? HashRef [ Tuple [ Path, Path, PositiveOrZeroInt ] ]
+             : HashRef,
     builder => 1,
     coerce  => 1,
 );
@@ -76,7 +79,7 @@ sub _build_css_files {
 
 has cdn_links => (
     is        => 'ro',
-    isa       => HashRef [NonEmptySimpleStr],
+    isa       => STRICT ? HashRef [NonEmptySimpleStr] : HashRef,
     predicate => 1,
 );
 
