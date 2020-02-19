@@ -4,6 +4,8 @@ Revision history for {{ $dist->name }}:
   [Documentation]
   - Improved the DESCRIPTION section of the module.
 
+  - Added note about "deferrable".
+
   - Fixed POD error.
 
   [Other]

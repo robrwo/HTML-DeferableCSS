@@ -234,6 +234,10 @@ All files are embedded as raw files.
 
 No URL encoding is done on the HTML links or ["asset\_id"](#asset_id).
 
+## It's spelled "Deferrable"
+
+It's also spelled "Deferable".
+
 # SOURCE
 
 The development version is on github at [https://github.com/robrwo/HTML-DeferableCSS](https://github.com/robrwo/HTML-DeferableCSS)

@@ -507,6 +507,10 @@ All files are embedded as raw files.
 
 No URL encoding is done on the HTML links or L</asset_id>.
 
+=head2 It's spelled "Deferrable"
+
+It's also spelled "Deferable".
+
 =cut
 
 1;
