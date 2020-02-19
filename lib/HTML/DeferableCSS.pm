@@ -9,7 +9,7 @@ use Carp qw/ croak /;
 use Devel::StrictMode;
 use File::ShareDir 1.112 qw/ module_file /;
 use MooX::TypeTiny;
-use List::Util qw/ first uniqstr /;
+use List::Util 1.45 qw/ first uniqstr /;
 use Path::Tiny;
 use Types::Path::Tiny qw/ Dir File Path /;
 use Types::Common::Numeric qw/ PositiveOrZeroInt /;
