@@ -9,6 +9,8 @@ Revision history for {{ $dist->name }}:
 
   - Added explicit minimum version of List::Util to the module.
 
+  - Removed trailing whitespace from sample file used for tests.
+
   [Toolchain]
   - Added author test for POD links.
 

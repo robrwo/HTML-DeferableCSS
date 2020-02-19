@@ -38,7 +38,7 @@ subtest "css_files (prefer_min=0)" => sub {
     my $files = $css->css_files;
 
     cmp_deeply $files, {
-        reset => [ obj_isa('Path::Tiny'), obj_isa('Path::Tiny'), 1092 ],
+        reset => [ obj_isa('Path::Tiny'), obj_isa('Path::Tiny'), 1089 ],
     }, "css_files";
 
     is $files->{reset}->[0]->stringify => "t/etc/css/reset.css", "filename";
@@ -59,7 +59,7 @@ subtest "css_files (full name)" => sub {
     my $files = $css->css_files;
 
     cmp_deeply $files, {
-        reset => [ obj_isa('Path::Tiny'), obj_isa('Path::Tiny'), 1092 ],
+        reset => [ obj_isa('Path::Tiny'), obj_isa('Path::Tiny'), 1089 ],
     }, "css_files";
 
     is $files->{reset}->[0]->stringify => "t/etc/css/reset.css", "filename";
