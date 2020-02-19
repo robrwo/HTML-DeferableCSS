@@ -9,6 +9,9 @@ Revision history for {{ $dist->name }}:
 
   - Added explicit minimum version of List::Util to the module.
 
+  [Toolchain]
+  - Added author test for POD links.
+
 v0.1.1    2020-02-19 08:26:12+00:00 Europe/London
   [Other]
   - Changed licence to MIT for compatability with included JavaScript.
