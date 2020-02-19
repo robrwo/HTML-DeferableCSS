@@ -159,7 +159,7 @@ If files cannot be found, then it will throw an error.
 has css_files => (
     is  => 'lazy',
     isa => STRICT
-             ? HashRef [ Tuple [ Maybe[Path], Path | URI, PositiveOrZeroInt ] ]
+             ? HashRef [ Tuple [ Maybe[Path], Path | Uri, PositiveOrZeroInt ] ]
              : HashRef,
     builder => 1,
     coerce  => 1,
