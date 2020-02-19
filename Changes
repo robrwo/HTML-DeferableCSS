@@ -11,6 +11,8 @@ Revision history for {{ $dist->name }}:
 
   - Removed trailing whitespace from sample file used for tests.
 
+  - Fixed typo in module metadata.
+
   [Toolchain]
   - Added author test for POD links.
 
