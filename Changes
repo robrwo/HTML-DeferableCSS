@@ -17,7 +17,8 @@ Revision history for {{ $dist->name }}:
 
   - Added explicit minimum version of List::Util to the module.
 
-  - Removed trailing whitespace from sample file used for tests.
+  - Removed trailing whitespace and tabs from sample files used for
+    tests.
 
   - Fixed typo in module metadata.
 
