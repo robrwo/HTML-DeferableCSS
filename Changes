@@ -1,6 +1,8 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+
+v0.1.2    2020-02-19 21:38:14+00:00 Europe/London
   [Improvements]
   - Use strings instead of Path::Tiny or URI objects, since only the
     string was needed. (This removes the need for some prereqs.)
