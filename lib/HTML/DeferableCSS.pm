@@ -76,17 +76,41 @@ automatically inline small stylesheets;
 
 =item *
 
-use deferred-loading stylesheets;
+use deferred-loading stylesheets, which requires embedding JavaScript
+code as a workaround for web browsers that do not support these
+natively.
 
 =back
 
 =cut
 
+=attr aliases
+
+This is a required hash reference of names and their relative
+filenames to L</css_root>.
+
+It is recommended that the F<.css> and F<.min.css> suffixes be
+omitted.
+
+Absolute paths cannot be used.
+
+You may specify URLs instead of files, but this is not recommended,
+except for cases when the files are not available locally.
+
+=cut
+
 has aliases => (
     is       => 'ro',
-    isa      => STRICT ? HashRef [NonEmptySimpleStr] : HashRef,
+    isa      => STRICT ? HashRef [Path | Uri] : HashRef,
     required => 1,
 );
+
+=attr css_root
+
+This is the required root directory where all stylesheets can be
+found.
+
+=cut
 
 has css_root => (
     is       => 'ro',
@@ -95,17 +119,44 @@ has css_root => (
     required => 1,
 );
 
+=attr url_base_path
+
+This is the URL prefix for stylesheets.
+
+It can be a full URL prefix.
+
+=cut
+
 has url_base_path => (
     is      => 'ro',
     isa     => SimpleStr,
     default => '/',
 );
 
+=attr prefer_min
+
+If true (default), then a file with the F<.min.css> suffix will be
+preferred, if it exists in the same directory.
+
+Note that this does not do any minification. You will need separate
+tools for that.
+
+=cut
+
 has prefer_min => (
     is      => 'ro',
     isa     => Bool,
     default => 1,
 );
+
+=attr css_files
+
+This is a hash reference used internally to translate L</aliases>
+into the actual files or URLs.
+
+If files cannot be found, then it will throw an error.
+
+=cut
 
 has css_files => (
     is  => 'lazy',
@@ -144,11 +195,30 @@ sub _build_css_files {
     return \%files;
 }
 
+=attr cdn_links
+
+This is a hash reference of L</aliases> to URLs.
+
+When L</use_cdn_links> is true, then these URLs will be used instead
+of local versions.
+
+=attr has_cdn_links
+
+This is true when there are L</cdn_links>.
+
+=cut
+
 has cdn_links => (
     is        => 'ro',
     isa       => STRICT ? HashRef [Uri] : HashRef,
     predicate => 1,
 );
+
+=attr use_cdn_links
+
+When true, this will prefer CDN URLs instead of local files.
+
+=cut
 
 has use_cdn_links => (
     is      => 'lazy',
@@ -156,11 +226,32 @@ has use_cdn_links => (
     builder => 'has_cdn_links',
 );
 
+=attr inline_max
+
+This specifies the maximum size of an file to inline.
+
+Local files under the size will be inlined using the
+L</link_or_inline_html> or L</deferred_link_html> methods.
+
+Setting this to 0 disables the use of inline links, unless
+L</inline_html> is called explicitly.
+
+=cut
+
 has inline_max => (
     is      => 'ro',
     isa     => PositiveOrZeroInt,
     default => 1024,
 );
+
+=attr defer_css
+
+True by default.
+
+This is used by L</deferred_link_html> to determine whether to emit
+code for deferred stylesheets.
+
+=cut
 
 has defer_css => (
     is      => 'ro',
@@ -168,14 +259,30 @@ has defer_css => (
     default => 1,
 );
 
+=attr include_noscript
+
+When true, a C<noscript> element will be included with non-deffered
+links.
+
+This defaults to the same value as L</defer_css>.
+
+=cut
+
 has include_noscript => (
     is      => 'lazy',
     isa     => Bool,
-    builder => sub {
-        my ($self) = @_;
-        return $self->defer_css;
-    },
+    builder => 'defer_css',
 );
+
+=attr preload_script
+
+This is the pathname of the F<cssrelpreload.js> file that will be
+embedded in the resulting code.
+
+You do not need to modify this unless you want to use a different
+script from the one included with this module.
+
+=cut
 
 has preload_script => (
     is      => 'lazy',
@@ -183,6 +290,12 @@ has preload_script => (
     coerce  => 1,
     builder => sub { module_file(__PACKAGE__, 'cssrelpreload.min.js') },
 );
+
+=attr link_template
+
+This is a code reference for a subroutine that returns a stylesheet link.
+
+=cut
 
 has link_template => (
     is      => 'ro',
@@ -192,6 +305,14 @@ has link_template => (
     },
 );
 
+=attr preload_template
+
+This is a code reference for a subroutine that returns a stylesheet
+preload link.
+
+=cut
+
+
 has preload_template => (
     is      => 'ro',
     isa     => CodeRef,
@@ -200,11 +321,30 @@ has preload_template => (
     },
 );
 
+=attr asset_id
+
+This is an optional static asset id to append to local links. It may
+refer to a version number or commit-id, for example.
+
+This is useful to ensure that changes to stylesheets are picked up by
+web browsers that would otherwise use cached copies of older versions
+of files.
+
+=cut
+
 has asset_id => (
     is        => 'ro',
     isa       => NonEmptySimpleStr,
     predicate => 1,
 );
+
+=method href
+
+  my $href = $css->href( $alias );
+
+This returns this URL for an alias.
+
+=cut
 
 sub href {
     my ($self, $name, $file) = @_;
@@ -224,10 +364,27 @@ sub href {
     }
 }
 
+=method link_html
+
+  my $html = $css->link_html( $alias );
+
+This returns the link HTML markup for the stylesheet referred to by
+C<$alias>.
+
+=cut
+
 sub link_html {
     my ( $self, $name, $file ) = @_;
     return $self->link_template->( $self->href( $name, $file ) );
 }
+
+=method inline_html
+
+  my $html = $css->inline_html( $alias );
+
+This returns an embedded stylesheet referred to by C<$alias>.
+
+=cut
 
 sub inline_html {
     my ( $self, $name, $file ) = @_;
@@ -242,6 +399,15 @@ sub inline_html {
     }
 }
 
+=method inline_html
+
+  my $html = $css->link_or_inline_html( $alias );
+
+This returns either the link HTML markup, or the embedded stylesheet,
+if the file size is not greater than L</inline_max>.
+
+=cut
+
 sub link_or_inline_html {
     my ($self, $name ) = @_;
     croak "missing name" unless defined $name;
@@ -254,6 +420,19 @@ sub link_or_inline_html {
         return $self->link_html($name, $file);
     }
 }
+
+=method deferred_link_html
+
+  my $html = $css->deferred_link_html( @aliases );
+
+This returns the HTML markup for the stylesheets specified by
+L<@aliases>, as appropriate for each stylesheet.
+
+If the stylesheets are not greater than L</inline_max>, then it will
+embed them.  Otherwise it will return the appropriate markup,
+depending on L</defer_css>.
+
+=cut
 
 sub deferred_link_html {
     my ($self, @names) = @_;
@@ -297,6 +476,12 @@ This module is written for HTML5.
 
 It does not support XHTML self-closing elements or embedding styles
 and scripts in CDATA sections.
+
+=head2 Encoding
+
+All files are embedded as raw files.
+
+No URL encoding is done on the HTML links or L</asset_id>.
 
 =cut
 
