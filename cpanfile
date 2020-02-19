@@ -1,5 +1,5 @@
 requires "Devel::StrictMode" => "0";
-requires "File::ShareDir" => "0";
+requires "File::ShareDir" => "1.112";
 requires "List::Util" => "1.45";
 requires "Moo" => "0";
 requires "MooX::TypeTiny" => "0";

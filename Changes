@@ -1,6 +1,8 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+  [Other]
+  - Increased minimum version of File::ShareDir.
 
 v0.1.1    2020-02-19 08:26:12+00:00 Europe/London
   [Other]

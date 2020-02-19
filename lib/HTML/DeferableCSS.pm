@@ -7,7 +7,7 @@ use Moo;
 
 use Carp qw/ croak /;
 use Devel::StrictMode;
-use File::ShareDir qw/ module_file /;
+use File::ShareDir 1.112 qw/ module_file /;
 use MooX::TypeTiny;
 use List::Util qw/ first uniqstr /;
 use Path::Tiny;
