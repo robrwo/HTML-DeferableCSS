@@ -99,7 +99,7 @@ except for cases when the files are not available locally.
 
 has aliases => (
     is       => 'ro',
-    isa      => STRICT ? HashRef [Path | Uri] : HashRef,
+    isa      => STRICT ? HashRef [NonEmptySimpleStr] : HashRef,
     required => 1,
 );
 
@@ -153,6 +153,8 @@ This is a hash reference used internally to translate L</aliases>
 into the actual files or URLs.
 
 If files cannot be found, then it will throw an error.
+
+=for Pod::Coverage PATH NAME SIZE
 
 =cut
 
@@ -212,7 +214,7 @@ This is true when there are L</cdn_links>.
 
 has cdn_links => (
     is        => 'ro',
-    isa       => STRICT ? HashRef [Uri] : HashRef,
+    isa       => STRICT ? HashRef [NonEmptySimpleStr] : HashRef,
     predicate => 1,
 );
 
@@ -332,6 +334,10 @@ This is useful to ensure that changes to stylesheets are picked up by
 web browsers that would otherwise use cached copies of older versions
 of files.
 
+=attr has_asset_id
+
+True if there is an L</asset_id>.
+
 =cut
 
 has asset_id => (
@@ -401,7 +407,7 @@ sub inline_html {
     }
 }
 
-=method inline_html
+=method link_or_inline_html
 
   my $html = $css->link_or_inline_html( $alias );
 
