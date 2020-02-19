@@ -31,7 +31,22 @@ print $css->deferred_link_html( qw[ jqui site ] );
 
 # DESCRIPTION
 
-This is an experimental module.
+This is an experimental module for generating HTML-snippets for
+deferable stylesheets.
+
+This allows the stylesheets to be loaded asynchronously, allowing the
+page to be rendered faster.
+
+Ideally, this would be a simple matter of changing stylesheet links
+to something like
+
+```
+<link rel="preload" as="stylesheet" href="....">
+```
+
+but this is not well supported by all web browsers. So a web page
+needs some JavaScript to handle this, as well as a `noscript` block
+as a fallback.
 
 This module allows you to simplify the management of stylesheets for a
 web application, from development to production by
