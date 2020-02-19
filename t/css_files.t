@@ -16,10 +16,11 @@ subtest "css_files" => sub {
     my $files = $css->css_files;
 
     cmp_deeply $files, {
-        reset => [ obj_isa('Path::Tiny'), obj_isa('Path::Tiny'), 773 ],
+        reset => [ obj_isa('Path::Tiny'), ignore(), 773 ],
     }, "css_files";
 
-    is $files->{reset}->[0]->stringify => "t/etc/css/reset.min.css", "filename";
+    is $files->{reset}->[0]->stringify => "t/etc/css/reset.min.css", "path";
+    is $files->{reset}->[1]            => "reset.min.css", "filename";
 
 };
 
@@ -38,10 +39,11 @@ subtest "css_files (prefer_min=0)" => sub {
     my $files = $css->css_files;
 
     cmp_deeply $files, {
-        reset => [ obj_isa('Path::Tiny'), obj_isa('Path::Tiny'), 1089 ],
+        reset => [ obj_isa('Path::Tiny'), ignore(), 1089 ],
     }, "css_files";
 
-    is $files->{reset}->[0]->stringify => "t/etc/css/reset.css", "filename";
+    is $files->{reset}->[0]->stringify => "t/etc/css/reset.css", "path";
+    is $files->{reset}->[1]            => "reset.css", "filename";
 
 };
 
@@ -59,10 +61,11 @@ subtest "css_files (full name)" => sub {
     my $files = $css->css_files;
 
     cmp_deeply $files, {
-        reset => [ obj_isa('Path::Tiny'), obj_isa('Path::Tiny'), 1089 ],
+        reset => [ obj_isa('Path::Tiny'), ignore(), 1089 ],
     }, "css_files";
 
-    is $files->{reset}->[0]->stringify => "t/etc/css/reset.css", "filename";
+    is $files->{reset}->[0]->stringify => "t/etc/css/reset.css", "path";
+    is $files->{reset}->[1]            => "reset.css", "filename";
 
 };
 
@@ -80,10 +83,11 @@ subtest "css_files (full name)" => sub {
     my $files = $css->css_files;
 
     cmp_deeply $files, {
-        reset => [ obj_isa('Path::Tiny'), obj_isa('Path::Tiny'), 773 ],
+        reset => [ obj_isa('Path::Tiny'), ignore(), 773 ],
     }, "css_files";
 
-    is $files->{reset}->[0]->stringify => "t/etc/css/reset.min.css", "filename";
+    is $files->{reset}->[0]->stringify => "t/etc/css/reset.min.css", "path";
+    is $files->{reset}->[1]            => "reset.min.css", "filename";
 
 };
 
@@ -134,10 +138,10 @@ subtest "css_files (URI)" => sub {
     my $files = $css->css_files;
 
     cmp_deeply $files, {
-        reset => [ undef, obj_isa('URI'), ignore() ],
+        reset => [ undef, ignore(), ignore() ],
     }, "css_files";
 
-    is $files->{reset}->[1]->as_string => "http://cdn.example.com/reset.css", "uri";
+    is $files->{reset}->[1] => "http://cdn.example.com/reset.css", "uri";
 
 };
 
@@ -155,10 +159,10 @@ subtest "css_files (URI)" => sub {
     my $files = $css->css_files;
 
     cmp_deeply $files, {
-        reset => [ undef, obj_isa('URI'), ignore() ],
+        reset => [ undef, ignore(), ignore() ],
     }, "css_files";
 
-    is $files->{reset}->[1]->as_string => "//cdn.example.com/reset.css", "uri";
+    is $files->{reset}->[1] => "//cdn.example.com/reset.css", "uri";
 
 };
 

@@ -15,8 +15,6 @@ use Types::Path::Tiny qw/ Dir File Path /;
 use Types::Common::Numeric qw/ PositiveOrZeroInt /;
 use Types::Common::String qw/ NonEmptySimpleStr SimpleStr /;
 use Types::Standard qw/ Bool CodeRef HashRef Maybe Tuple /;
-use Types::URI qw/ Uri /;
-use URI;
 
 # RECOMMEND PREREQ: Type::Tiny::XS
 
@@ -177,7 +175,7 @@ If files cannot be found, then it will throw an error.
 has css_files => (
     is  => 'lazy',
     isa => STRICT
-             ? HashRef [ Tuple [ Maybe[Path], Path | Uri, PositiveOrZeroInt ] ]
+             ? HashRef [ Tuple [ Maybe[Path], NonEmptySimpleStr, PositiveOrZeroInt ] ]
              : HashRef,
     builder => 1,
     coerce  => 1,
@@ -197,7 +195,7 @@ sub _build_css_files {
     for my $name (keys %{ $self->aliases }) {
         my $base  = $self->aliases->{$name};
         if ($base =~ m{^(\w+:)?//}) {
-            $files{$name} = [ undef, URI->new($base), 0 ];
+            $files{$name} = [ undef, $base, 0 ];
         }
         else {
             my @bases = ( $base );
@@ -208,7 +206,7 @@ sub _build_css_files {
                 croak "alias '$name' refers to a non-existent file";
             }
             # PATH NAME SIZE
-            $files{$name} = [ $file, $file->relative($root), $file->stat->size ];
+            $files{$name} = [ $file, $file->relative($root)->stringify, $file->stat->size ];
         }
     }
 
@@ -376,7 +374,7 @@ sub href {
     $file //= $self->css_files->{$name};
     croak "invalid name '$name'" unless defined $file;
     if (defined $file->[PATH]) {
-        my $href = $self->url_base_path . $file->[NAME]->stringify;
+        my $href = $self->url_base_path . $file->[NAME];
         $href .= '?' . $self->asset_id if $self->has_asset_id;
         if ($self->use_cdn_links && $self->has_cdn_links) {
             return $self->cdn_links->{$name} // $href;

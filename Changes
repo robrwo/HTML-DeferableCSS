@@ -1,6 +1,10 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+  [Improvements]
+  - Use strings instead of Path::Tiny or URI objects, since only the
+    string was needed. (This removes the need for some prereqs.)
+
   [Documentation]
   - Improved the DESCRIPTION section of the module.
 
