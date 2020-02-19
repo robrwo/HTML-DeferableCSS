@@ -2,7 +2,7 @@ Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
   [Other]
-  - Increased minimum version of File::ShareDir.
+  - Added explicit minimum version of File::ShareDir to the module.
 
   - Added explicit minimum version of List::Util to the module.
 
