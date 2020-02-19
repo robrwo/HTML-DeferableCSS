@@ -45,7 +45,10 @@ our $VERSION = 'v0.1.0';
 
   print $css->deferred_link_html( qw[ jqui site ] );
 
+
 =head1 DESCRIPTION
+
+This is an experimental module.
 
 This module allows you to simplify the management of stylesheets for a
 web application, from development to production by

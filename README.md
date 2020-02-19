@@ -31,6 +31,8 @@ print $css->deferred_link_html( qw[ jqui site ] );
 
 # DESCRIPTION
 
+This is an experimental module.
+
 This module allows you to simplify the management of stylesheets for a
 web application, from development to production by
 
