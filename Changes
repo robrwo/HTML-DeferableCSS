@@ -1,6 +1,8 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+  [Other]
+  - Changed licence to MIT for compatability with included JavaScript.
 
 v0.1.0    2020-02-19 00:34:23+00:00 Europe/London
   - Initial version released.

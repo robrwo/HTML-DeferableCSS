@@ -4,7 +4,7 @@ HTML::DeferableCSS - Simplify management of stylesheets in your HTML
 
 # VERSION
 
-version v0.1.0
+version v0.1.1
 
 # SYNOPSIS
 
@@ -248,5 +248,5 @@ This software is Copyright (c) 2020 by Robert Rothenberg.
 This is free software, licensed under:
 
 ```
-The Artistic License 2.0 (GPL Compatible)
+The MIT (X11) License
 ```
