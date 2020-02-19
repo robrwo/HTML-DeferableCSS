@@ -198,7 +198,7 @@ my $html = $css->deferred_link_html( @aliases );
 ```
 
 This returns the HTML markup for the stylesheets specified by
-[@aliases](https://metacpan.org/pod/@aliases), as appropriate for each stylesheet.
+["aliases"](#aliases), as appropriate for each stylesheet.
 
 If the stylesheets are not greater than ["inline\_max"](#inline_max), then it will
 embed them.  Otherwise it will return the appropriate markup,

@@ -437,7 +437,7 @@ sub link_or_inline_html {
   my $html = $css->deferred_link_html( @aliases );
 
 This returns the HTML markup for the stylesheets specified by
-L<@aliases>, as appropriate for each stylesheet.
+L</aliases>, as appropriate for each stylesheet.
 
 If the stylesheets are not greater than L</inline_max>, then it will
 embed them.  Otherwise it will return the appropriate markup,
