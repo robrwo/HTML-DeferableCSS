@@ -22,10 +22,6 @@ use URI;
 
 use namespace::autoclean;
 
-use constant PATH => 0;
-use constant NAME => 1;
-use constant SIZE => 2;
-
 =head1 SYNOPSIS
 
   use HTML::DeferableCSS;
@@ -166,6 +162,10 @@ has css_files => (
     builder => 1,
     coerce  => 1,
 );
+
+use constant PATH => 0;
+use constant NAME => 1;
+use constant SIZE => 2;
 
 sub _build_css_files {
     my ($self) = @_;
