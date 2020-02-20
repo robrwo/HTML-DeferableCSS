@@ -470,7 +470,7 @@ sub link_or_inline_html {
         croak "missing name" unless defined $name;
         my $file = $self->css_files->{$name};
         croak "invalid name '$name'" unless defined $file;
-        if ($file->[SIZE] <= $self->inline_max) {
+        if ( $file->[PATH] && ($file->[SIZE] <= $self->inline_max)) {
             return $self->inline_html($name, $file);
         }
         else {
@@ -498,7 +498,7 @@ sub deferred_link_html {
     my @deferred;
     for my $name (uniqstr @names) {
         my $file = $self->css_files->{$name} or croak "invalid name '$name'";
-        if ($file->[SIZE] <= $self->inline_max) {
+        if ($file->[PATH] && $file->[SIZE] <= $self->inline_max) {
             $buffer .= $self->inline_html($name, $file);
         }
         elsif ($self->defer_css) {

@@ -4,6 +4,10 @@ Revision history for {{ $dist->name }}:
   [Improvements]
   - aliases can accept an array reference.
 
+  [Bug Fixes]
+  - If an alias points to a URI, then link_or_inline_html and
+    deferred_link_html will return the link_html.
+
   [Documentation]
   - Added more examples to POD.
 

@@ -49,4 +49,23 @@ subtest "inline (small inline_max)" => sub {
 
 };
 
+subtest "inline url" => sub {
+
+    my $css = HTML::DeferableCSS->new(
+        css_root => 't/etc/css',
+        aliases  => {
+            test => 'http://example.com',
+        },
+    );
+
+    isa_ok $css, 'HTML::DeferableCSS';
+
+    throws_ok {
+        $css->inline_html('test');
+    } qr/'test' refers to a URI/, "inline_html of a URL dies";
+
+    is $css->link_or_inline_html('test'), $css->link_html('test'), "link_or_inline";
+
+};
+
 done_testing;
