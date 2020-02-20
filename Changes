@@ -1,6 +1,8 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+  [Bug Fixes]
+  - Added explicit minimum version of Moo.
 
 v0.1.2    2020-02-19 21:38:14+00:00 Europe/London
   [Improvements]

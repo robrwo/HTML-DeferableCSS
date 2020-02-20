@@ -3,7 +3,7 @@ package HTML::DeferableCSS;
 # ABSTRACT: Simplify management of stylesheets in your HTML
 
 use v5.10;
-use Moo;
+use Moo 1.006000;
 
 use Carp qw/ croak /;
 use Devel::StrictMode;
