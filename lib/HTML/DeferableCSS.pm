@@ -118,7 +118,7 @@ except for cases when the files are not available locally.
 
 has aliases => (
     is       => 'ro',
-    isa      => STRICT ? HashRef [Maybe[NonEmptySimpleStr]] : HashRef,
+    isa      => STRICT ? HashRef [Maybe[SimpleStr]] : HashRef,
     required => 1,
 );
 
