@@ -11,7 +11,8 @@ Revision history for {{ $dist->name }}:
   - link_or_inline_html can accept a list of aliases.
 
   [Bug Fixes]
-  - Use the dist_share instead of the module_share.
+  - Use the dist_share instead of the module_share. (Basically,
+    defer_link_html did not work outside of tests.)
 
   [Build Fixes]
   - Added explicit minimum version of Moo.
