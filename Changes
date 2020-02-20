@@ -8,6 +8,8 @@ Revision history for {{ $dist->name }}:
   - False ("0", "" or undef) aliases are ignored. (You can use "0.css"
     if that is the name of the file.)
 
+  - link_or_inline_html can accept a list of aliases.
+
   [Bug Fixes]
   - Use the dist_share instead of the module_share.
 

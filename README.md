@@ -205,7 +205,7 @@ This returns an embedded stylesheet referred to by `$alias`.
 ## link\_or\_inline\_html
 
 ```perl
-my $html = $css->link_or_inline_html( $alias );
+my $html = $css->link_or_inline_html( @aliases );
 ```
 
 This returns either the link HTML markup, or the embedded stylesheet,

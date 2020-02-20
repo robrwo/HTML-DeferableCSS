@@ -429,7 +429,7 @@ sub inline_html {
 
 =method link_or_inline_html
 
-  my $html = $css->link_or_inline_html( $alias );
+  my $html = $css->link_or_inline_html( @aliases );
 
 This returns either the link HTML markup, or the embedded stylesheet,
 if the file size is not greater than L</inline_max>.
@@ -437,15 +437,17 @@ if the file size is not greater than L</inline_max>.
 =cut
 
 sub link_or_inline_html {
-    my ($self, $name ) = @_;
-    croak "missing name" unless defined $name;
-    my $file = $self->css_files->{$name};
-    croak "invalid name '$name'" unless defined $file;
-    if ($file->[SIZE] <= $self->inline_max) {
-        return $self->inline_html($name, $file);
-    }
-    else {
-        return $self->link_html($name, $file);
+    my ($self, @names ) = @_;
+    foreach my $name (@names) {
+        croak "missing name" unless defined $name;
+        my $file = $self->css_files->{$name};
+        croak "invalid name '$name'" unless defined $file;
+        if ($file->[SIZE] <= $self->inline_max) {
+            return $self->inline_html($name, $file);
+        }
+        else {
+            return $self->link_html($name, $file);
+        }
     }
 }
 
