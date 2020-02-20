@@ -4,10 +4,18 @@ Revision history for {{ $dist->name }}:
   [Bug Fixes]
   - Added explicit minimum version of Moo.
 
+  [Documentation]
+  - Reorganised Changes file.
+
 v0.1.2    2020-02-19 21:38:14+00:00 Europe/London
   [Improvements]
   - Use strings instead of Path::Tiny or URI objects, since only the
     string was needed. (This removes the need for some prereqs.)
+
+  [Bug Fixes]
+  - Added explicit minimum version of File::ShareDir to the module.
+
+  - Added explicit minimum version of List::Util to the module.
 
   [Documentation]
   - Improved the DESCRIPTION section of the module.
@@ -17,10 +25,6 @@ v0.1.2    2020-02-19 21:38:14+00:00 Europe/London
   - Fixed POD error.
 
   [Other]
-  - Added explicit minimum version of File::ShareDir to the module.
-
-  - Added explicit minimum version of List::Util to the module.
-
   - Removed trailing whitespace and tabs from sample files used for
     tests.
 
