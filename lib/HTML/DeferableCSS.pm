@@ -245,7 +245,8 @@ sub _build_css_files {
 
 =attr cdn_links
 
-This is a hash reference of L</aliases> to URLs.
+This is a hash reference of L</aliases> to URLs. (Only one URL per
+alias is supported.)
 
 When L</use_cdn_links> is true, then these URLs will be used instead
 of local versions.
@@ -457,6 +458,9 @@ sub inline_html {
 
 This returns either the link HTML markup, or the embedded stylesheet,
 if the file size is not greater than L</inline_max>.
+
+Note that a stylesheet will be inlined, even if there is are
+L</cdn_links>.
 
 =cut
 
