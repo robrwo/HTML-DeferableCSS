@@ -107,7 +107,16 @@ omitted.
 
 If the name is the same as the filename (without the extension) than
 you can simply use C<1>.  (Likewise, an empty string or C<0> disables
-the alias.)
+the alias:
+
+  my $css = HTML::DeferableCSS->new(
+    aliases => {
+        reset => 1,
+        gone  => 0,       # using "gone" will throw an error
+        one   => "1.css", #
+    }
+    ...
+  );
 
 If all names are the same as their filenames, then an array reference
 can be used:
@@ -183,7 +192,10 @@ has prefer_min => (
 This is a hash reference used internally to translate L</aliases>
 into the actual files or URLs.
 
-If files cannot be found, then it will throw an error.
+If files cannot be found, then it will throw an error, so calling this
+attribute in void context can be used to check for any errors:
+
+  eval { $css->css_files } or die "$@";
 
 =for Pod::Coverage PATH NAME SIZE
 

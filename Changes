@@ -4,6 +4,9 @@ Revision history for {{ $dist->name }}:
   [Improvements]
   - aliases can accept an array reference.
 
+  [Documentation]
+  - Added more examples to POD.
+
 v0.2.0    2020-02-20 17:37:47+00:00 Europe/London
   [Improvements]
   - Allows "1" as an alias when the filename is the same as the name.

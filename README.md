@@ -73,7 +73,28 @@ omitted.
 
 If the name is the same as the filename (without the extension) than
 you can simply use `1`.  (Likewise, an empty string or `0` disables
-the alias.)
+the alias:
+
+```perl
+my $css = HTML::DeferableCSS->new(
+  aliases => {
+      reset => 1,
+      gone  => 0,       # using "gone" will throw an error
+      one   => "1.css", #
+  }
+  ...
+);
+```
+
+If all names are the same as their filenames, then an array reference
+can be used:
+
+```perl
+my $css = HTML::DeferableCSS->new(
+  aliases => [ qw( foo bar } ],
+  ...
+);
+```
 
 Absolute paths cannot be used.
 
@@ -104,7 +125,12 @@ tools for that.
 This is a hash reference used internally to translate ["aliases"](#aliases)
 into the actual files or URLs.
 
-If files cannot be found, then it will throw an error.
+If files cannot be found, then it will throw an error, so calling this
+attribute in void context can be used to check for any errors:
+
+```
+eval { $css->css_files } or die "$@";
+```
 
 ## cdn\_links
 
