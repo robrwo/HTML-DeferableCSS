@@ -24,6 +24,69 @@ subtest "css_files" => sub {
 
 };
 
+subtest "css_files (alias => 1)" => sub {
+
+    my $css = HTML::DeferableCSS->new(
+        css_root => 't/etc/css',
+        aliases  => {
+            reset => 1,
+            gone1 => 0,
+            gone2 => '',
+            gone3 => undef,
+        },
+    );
+
+    isa_ok $css, 'HTML::DeferableCSS';
+
+    my $files = $css->css_files;
+
+    cmp_deeply $files, {
+        reset => [ obj_isa('Path::Tiny'), ignore(), 773 ],
+    }, "css_files";
+
+    is $files->{reset}->[0]->stringify => "t/etc/css/reset.min.css", "path";
+    is $files->{reset}->[1]            => "reset.min.css", "filename";
+
+};
+
+subtest "css_files (1.css fails)" => sub {
+
+    my $css = HTML::DeferableCSS->new(
+        css_root => 't/etc/css',
+        aliases  => {
+            one => 1,
+        },
+    );
+
+    isa_ok $css, 'HTML::DeferableCSS';
+
+    throws_ok {
+        $css->css_files;
+    } qr/alias 'one' refers to a non-existent file/;
+
+};
+
+subtest "css_files (1.css workaround)" => sub {
+
+    my $css = HTML::DeferableCSS->new(
+        css_root => 't/etc/css',
+        aliases  => {
+            one => "1.css",
+        },
+    );
+
+    isa_ok $css, 'HTML::DeferableCSS';
+
+    my $files = $css->css_files;
+
+    cmp_deeply $files, {
+        one => [ obj_isa('Path::Tiny'), '1.css', 17 ],
+    }, "css_files";
+
+    is $files->{one}->[0]->stringify => "t/etc/css/1.css", "path";
+
+};
+
 subtest "css_files (prefer_min=0)" => sub {
 
     my $css = HTML::DeferableCSS->new(

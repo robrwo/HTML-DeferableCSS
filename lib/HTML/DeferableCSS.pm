@@ -31,6 +31,7 @@ our $VERSION = 'v0.1.3';
       url_base_path => '/css',
       inline_max    => 512,
       aliases => {
+        reset => 1,
         jqui  => 'jquery-ui',
         site  => 'style',
       },
@@ -104,6 +105,10 @@ filenames to L</css_root>.
 It is recommended that the F<.css> and F<.min.css> suffixes be
 omitted.
 
+If the name is the same as the filename (without the extension) than
+you can simply use C<1>.  (Likewise, an empty string or C<0> disables
+the alias.)
+
 Absolute paths cannot be used.
 
 You may specify URLs instead of files, but this is not recommended,
@@ -113,7 +118,7 @@ except for cases when the files are not available locally.
 
 has aliases => (
     is       => 'ro',
-    isa      => STRICT ? HashRef [NonEmptySimpleStr] : HashRef,
+    isa      => STRICT ? HashRef [Maybe[NonEmptySimpleStr]] : HashRef,
     required => 1,
 );
 
@@ -193,11 +198,12 @@ sub _build_css_files {
 
     my %files;
     for my $name (keys %{ $self->aliases }) {
-        my $base  = $self->aliases->{$name};
+        my $base  = $self->aliases->{$name} or next;
         if ($base =~ m{^(\w+:)?//}) {
             $files{$name} = [ undef, $base, 0 ];
         }
         else {
+            $base = $name if $base eq '1';
             my @bases = ( $base );
             unshift @bases, "${base}.css" unless $base =~ /\.css$/;
             unshift @bases, "${base}.min.css" unless $min || $base =~ /\.min\.css$/;

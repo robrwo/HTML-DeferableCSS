@@ -1,6 +1,13 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+  [Improvements]
+  - Allows "1" as an alias when the filename is the same as the name.
+    (You can use "1.css" if that is the name of the file.)
+
+  - False ("0", "" or undef) aliases are ignored. (You can use "0.css"
+    if that is the name of the file.)
+
   [Build Fixes]
   - Added explicit minimum version of Moo.
 

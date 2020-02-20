@@ -16,6 +16,7 @@ my $css = HTML::DeferableCSS->new(
     url_base_path => '/css',
     inline_max    => 512,
     aliases => {
+      reset => 1,
       jqui  => 'jquery-ui',
       site  => 'style',
     },
@@ -69,6 +70,10 @@ filenames to ["css\_root"](#css_root).
 
 It is recommended that the `.css` and `.min.css` suffixes be
 omitted.
+
+If the name is the same as the filename (without the extension) than
+you can simply use `1`.  (Likewise, an empty string or `0` disables
+the alias.)
 
 Absolute paths cannot be used.
 
