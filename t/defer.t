@@ -4,7 +4,7 @@ use File::ShareDir;
 use Cwd qw( getcwd );
 use File::Spec::Functions qw( rel2abs catdir );
 
-$File::ShareDir::MODULE_SHARE{'HTML::DeferableCSS'} = rel2abs(catdir(getcwd,'share'));
+$File::ShareDir::DIST_SHARE{'HTML-DeferableCSS'} = rel2abs(catdir(getcwd,'share'));
 
 use HTML::DeferableCSS;
 

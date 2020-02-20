@@ -7,7 +7,7 @@ use Moo 1.006000;
 
 use Carp qw/ croak /;
 use Devel::StrictMode;
-use File::ShareDir 1.112 qw/ module_file /;
+use File::ShareDir 1.112 qw/ dist_file /;
 use MooX::TypeTiny;
 use List::Util 1.45 qw/ first uniqstr /;
 use Path::Tiny;
@@ -312,7 +312,7 @@ has preload_script => (
     is      => 'lazy',
     isa     => File,
     coerce  => 1,
-    builder => sub { module_file(__PACKAGE__, 'cssrelpreload.min.js') },
+    builder => sub { dist_file( qw/ HTML-DeferableCSS cssrelpreload.min.js / ) },
 );
 
 =attr link_template
