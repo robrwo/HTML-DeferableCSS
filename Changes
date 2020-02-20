@@ -1,7 +1,7 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
-  [Bug Fixes]
+  [Build Fixes]
   - Added explicit minimum version of Moo.
 
   [Documentation]
@@ -12,7 +12,7 @@ v0.1.2    2020-02-19 21:38:14+00:00 Europe/London
   - Use strings instead of Path::Tiny or URI objects, since only the
     string was needed. (This removes the need for some prereqs.)
 
-  [Bug Fixes]
+  [Build Fixes]
   - Added explicit minimum version of File::ShareDir to the module.
 
   - Added explicit minimum version of List::Util to the module.
