@@ -5,7 +5,7 @@ package HTML::DeferableCSS;
 use v5.10;
 use Moo 1.006000;
 
-use Carp qw/ croak /;
+use Carp;
 use Devel::StrictMode;
 use File::ShareDir 1.112 qw/ dist_file /;
 use MooX::TypeTiny;
@@ -445,7 +445,11 @@ sub inline_html {
     $file //= $self->css_files->{$name};
     croak "invalid name '$name'" unless defined $file;
     if (my $path = $file->[PATH]) {
-        return "<style>" . $file->[PATH]->slurp_raw . "</style>";
+        if ($file->[SIZE]) {
+            return "<style>" . $file->[PATH]->slurp_raw . "</style>";
+        }
+        carp "empty file '$path'";
+        return "";
     }
     else {
         croak "'$name' refers to a URI";

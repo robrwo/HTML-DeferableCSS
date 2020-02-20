@@ -4,6 +4,9 @@ Revision history for {{ $dist->name }}:
   [Improvements]
   - aliases can accept an array reference.
 
+  - Return empty string for 0-byte files instead of empty style
+    element, but warn.
+
   [Bug Fixes]
   - If an alias points to a URI, then link_or_inline_html and
     deferred_link_html will return the link_html.

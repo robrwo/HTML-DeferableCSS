@@ -68,4 +68,27 @@ subtest "inline url" => sub {
 
 };
 
+subtest "inline (0-byte file)" => sub {
+
+    my $css = HTML::DeferableCSS->new(
+        css_root => 't/etc/css',
+        aliases  => {
+            test => '0.css',
+        },
+    );
+
+    isa_ok $css, 'HTML::DeferableCSS';
+
+    is $css->link_html('test'),
+        '<link rel="stylesheet" href="/0.css">',
+        "link_html";
+
+    warning_like {
+        is $css->inline_html('test'), "", "inline";
+    } qr/empty file/, 'warning';
+
+    is $css->link_or_inline_html('test'), "", "link_or_inline";
+
+};
+
 done_testing;
