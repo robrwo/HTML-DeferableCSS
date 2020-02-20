@@ -134,7 +134,8 @@ eval { $css->css_files } or die "$@";
 
 ## cdn\_links
 
-This is a hash reference of ["aliases"](#aliases) to URLs.
+This is a hash reference of ["aliases"](#aliases) to URLs. (Only one URL per
+alias is supported.)
 
 When ["use\_cdn\_links"](#use_cdn_links) is true, then these URLs will be used instead
 of local versions.
@@ -236,6 +237,9 @@ my $html = $css->link_or_inline_html( @aliases );
 
 This returns either the link HTML markup, or the embedded stylesheet,
 if the file size is not greater than ["inline\_max"](#inline_max).
+
+Note that a stylesheet will be inlined, even if there is are
+["cdn\_links"](#cdn_links).
 
 ## deferred\_link\_html
 
