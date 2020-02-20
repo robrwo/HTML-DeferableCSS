@@ -109,6 +109,14 @@ If the name is the same as the filename (without the extension) than
 you can simply use C<1>.  (Likewise, an empty string or C<0> disables
 the alias.)
 
+If all names are the same as their filenames, then an array reference
+can be used:
+
+  my $css = HTML::DeferableCSS->new(
+    aliases => [ qw( foo bar } ],
+    ...
+  );
+
 Absolute paths cannot be used.
 
 You may specify URLs instead of files, but this is not recommended,
@@ -120,6 +128,10 @@ has aliases => (
     is       => 'ro',
     isa      => STRICT ? HashRef [Maybe[SimpleStr]] : HashRef,
     required => 1,
+    coerce   => sub {
+        return { map { $_ => $_ } @{$_[0]} } if ref $_[0] eq 'ARRAY';
+        return $_[0];
+    },
 );
 
 =attr css_root

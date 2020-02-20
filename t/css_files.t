@@ -229,4 +229,24 @@ subtest "css_files (URI)" => sub {
 
 };
 
+subtest "css_files (array ref)" => sub {
+
+    my $css = HTML::DeferableCSS->new(
+        css_root => 't/etc/css',
+        aliases  => [ qw[ reset ] ],
+    );
+
+    isa_ok $css, 'HTML::DeferableCSS';
+
+    my $files = $css->css_files;
+
+    cmp_deeply $files, {
+        reset => [ obj_isa('Path::Tiny'), ignore(), 773 ],
+    }, "css_files";
+
+    is $files->{reset}->[0]->stringify => "t/etc/css/reset.min.css", "path";
+    is $files->{reset}->[1]            => "reset.min.css", "filename";
+
+};
+
 done_testing;

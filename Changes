@@ -1,6 +1,8 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+  [Improvements]
+  - aliases can accept an array reference.
 
 v0.2.0    2020-02-20 17:37:47+00:00 Europe/London
   [Improvements]
