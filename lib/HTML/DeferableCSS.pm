@@ -218,7 +218,7 @@ sub _build_css_files {
     my ($self) = @_;
 
     my $root = $self->css_root;
-    my $min  = !$self->prefer_min;
+    my $min  = $self->prefer_min;
 
     my %files;
     for my $name (keys %{ $self->aliases }) {
@@ -228,9 +228,11 @@ sub _build_css_files {
         }
         else {
             $base = $name if $base eq '1';
-            my @bases = ( $base );
-            unshift @bases, "${base}.css" unless $base =~ /\.css$/;
-            unshift @bases, "${base}.min.css" unless $min || $base =~ /\.min\.css$/;
+            $base =~ s/(?:\.min)?\.css$//;
+            my @bases = $min
+                ? ( "${base}.min.css",  "${base}.css", $base )
+                : ( "${base}.css",  "${base}.min.css", $base );
+
             my $file = first { $_->exists } map { path( $root, $_ ) } @bases;
             unless ($file) {
                 croak "alias '$name' refers to a non-existent file";

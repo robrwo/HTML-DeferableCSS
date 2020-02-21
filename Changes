@@ -6,6 +6,9 @@ v0.2.2    2020-02-21 10:17:42+00:00 Europe/London
   [Bug Fixes]
   - link_or_inline_html actually handlesm ultiple aliases.
 
+  - css_files will not fail if prefer_min is false but there is only a
+    minimised version of the file.
+
 v0.2.1    2020-02-21 09:05:29+00:00 Europe/London
   [Improvements]
   - aliases can accept an array reference.

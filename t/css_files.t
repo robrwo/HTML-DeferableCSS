@@ -110,10 +110,32 @@ subtest "css_files (prefer_min=0)" => sub {
 
 };
 
+subtest "css_files (prefer_min=0 works when there is only min)" => sub {
+
+    my $css = HTML::DeferableCSS->new(
+        css_root => 't/etc/css',
+        aliases  => {
+            bar => 1
+        },
+        prefer_min => 0,
+    );
+
+    isa_ok $css, 'HTML::DeferableCSS';
+
+    my $files = $css->css_files;
+
+    cmp_deeply $files, { bar => ignore() }, "css_files";
+
+    is $files->{bar}->[0]->stringify => "t/etc/css/bar.min.css", "path";
+    is $files->{bar}->[1]            => "bar.min.css", "filename";
+
+};
+
 subtest "css_files (full name)" => sub {
 
     my $css = HTML::DeferableCSS->new(
         css_root => 't/etc/css',
+        prefer_min => 0,
         aliases  => {
             reset => 'reset.css',
         },
