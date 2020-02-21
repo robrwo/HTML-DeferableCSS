@@ -470,7 +470,7 @@ L</cdn_links>.
 
 sub link_or_inline_html {
     my ($self, @names ) = @_;
-    foreach my $name (@names) {
+    foreach my $name (uniqstr @names) {
         croak "missing name" unless defined $name;
         my $file = $self->css_files->{$name};
         croak "invalid name '$name'" unless defined $file;

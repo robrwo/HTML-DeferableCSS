@@ -11,6 +11,8 @@ Revision history for {{ $dist->name }}:
   - If an alias points to a URI, then link_or_inline_html and
     deferred_link_html will return the link_html.
 
+  - link_or_inline_html didn't skip duplicate aliases.
+
   [Documentation]
   - Added more examples to POD.
 
