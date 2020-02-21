@@ -235,7 +235,8 @@ sub _build_css_files {
 
             my $file = first { $_->exists } map { path( $root, $_ ) } @bases;
             unless ($file) {
-                croak "alias '$name' refers to a non-existent file";
+                $self->log->( error => "alias '$name' refers to a non-existent file" );
+                next;
             }
             # PATH NAME SIZE
             $files{$name} = [ $file, $file->relative($root)->stringify, $file->stat->size ];
@@ -393,6 +394,42 @@ has asset_id => (
     predicate => 1,
 );
 
+=attr log
+
+This is a code reference for logging errors and warnings:
+
+  $css->log->( $level => $message );
+
+By default, this is a wrapper around L<Carp> that dies when the level
+is "error", and emits a warning for everything else.
+
+You can override this so that errors are treated as warnings,
+
+  log => sub { warn $_[1] },
+
+or that warnings are fatal,
+
+  log => sub { die $_[1] },
+
+or even integrate this with your own logging system:
+
+  log => sub { $logger->log(@_) },
+
+=cut
+
+has log => (
+    is => 'ro',
+    isa => CodeRef,
+    builder => sub {
+        return sub {
+            my ($level, $message) = @_;
+            croak $message if ($level eq 'error');
+            carp $message;
+        };
+    },
+);
+
+
 =method href
 
   my $href = $css->href( $alias );
@@ -403,9 +440,7 @@ This returns this URL for an alias.
 
 sub href {
     my ($self, $name, $file) = @_;
-    croak "missing name" unless defined $name;
-    $file //= $self->css_files->{$name};
-    croak "invalid name '$name'" unless defined $file;
+    $file //= $self->_get_file($name) or return;
     if (defined $file->[PATH]) {
         my $href = $self->url_base_path . $file->[NAME];
         $href .= '?' . $self->asset_id if $self->has_asset_id;
@@ -443,18 +478,17 @@ This returns an embedded stylesheet referred to by C<$alias>.
 
 sub inline_html {
     my ( $self, $name, $file ) = @_;
-    croak "missing name" unless defined $name;
-    $file //= $self->css_files->{$name};
-    croak "invalid name '$name'" unless defined $file;
+    $file //= $self->_get_file($name) or return;
     if (my $path = $file->[PATH]) {
         if ($file->[SIZE]) {
             return "<style>" . $file->[PATH]->slurp_raw . "</style>";
         }
-        carp "empty file '$path'";
+        $self->log->( warning => "empty file '$path'" );
         return "";
     }
     else {
-        croak "'$name' refers to a URI";
+        $self->log->( error => "'$name' refers to a URI" );
+        return;
     }
 }
 
@@ -474,7 +508,7 @@ sub link_or_inline_html {
     my ($self, @names ) = @_;
     my $buffer = "";
     foreach my $name (uniqstr @names) {
-        my $file = $self->css_files->{$name} or croak "invalid name '$name'";
+        my $file = $self->_get_file($name) or next;
         if ( $file->[PATH] && ($file->[SIZE] <= $self->inline_max)) {
             $buffer .= $self->inline_html($name, $file);
         }
@@ -503,7 +537,7 @@ sub deferred_link_html {
     my $buffer = "";
     my @deferred;
     for my $name (uniqstr @names) {
-        my $file = $self->css_files->{$name} or croak "invalid name '$name'";
+        my $file = $self->_get_file($name) or next;
         if ($file->[PATH] && $file->[SIZE] <= $self->inline_max) {
             $buffer .= $self->inline_html($name, $file);
         }
@@ -531,6 +565,23 @@ sub deferred_link_html {
 
     return $buffer;
 }
+
+sub _get_file {
+    my ($self, $name) = @_;
+    unless (defined $name) {
+        $self->log->( error => "missing name" );
+        return;
+    }
+    if (my $file = $self->css_files->{$name}) {
+        return $file;
+    }
+    else {
+        $self->log->( error => "invalid name '$name'" );
+        return;
+    }
+
+}
+
 
 =head1 KNOWN ISSUES
 
