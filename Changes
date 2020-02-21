@@ -13,8 +13,12 @@ Revision history for {{ $dist->name }}:
 
   - link_or_inline_html didn't skip duplicate aliases.
 
+  [Build Fixes]
+  - Added minimum version of Test::Deep for tests.
+
   [Documentation]
   - Added more examples to POD.
+
 
 v0.2.0    2020-02-20 17:37:47+00:00 Europe/London
   [Improvements]
