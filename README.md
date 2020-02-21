@@ -46,8 +46,8 @@ to something like
 ```
 
 but this is not well supported by all web browsers. So a web page
-needs some JavaScript to handle this, as well as a `noscript` block
-as a fallback.
+needs some [JavaScript](https://github.com/filamentgroup/loadCSS)
+to handle this, as well as a `noscript` block as a fallback.
 
 This module allows you to simplify the management of stylesheets for a
 web application, from development to production by
@@ -173,9 +173,10 @@ links.
 This defaults to the same value as ["defer\_css"](#defer_css).
 
 ## preload\_script
-
 This is the pathname of the `cssrelpreload.js` file that will be
 embedded in the resulting code.
+
+The script comes from [https://github.com/filamentgroup/loadCSS](https://github.com/filamentgroup/loadCSS).
 
 You do not need to modify this unless you want to use a different
 script from the one included with this module.
