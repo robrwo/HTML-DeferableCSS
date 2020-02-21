@@ -1,6 +1,8 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+  [Documentation]
+  - Added more notes about where the JavaScript comes from.
 
 v0.2.3    2020-02-21 13:50:19+00:00 Europe/London
   [Improvements]
