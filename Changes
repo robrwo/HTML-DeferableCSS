@@ -1,6 +1,8 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+
+v0.2.2    2020-02-21 10:17:42+00:00 Europe/London
   [Bug Fixes]
   - link_or_inline_html actually handlesm ultiple aliases.
 
