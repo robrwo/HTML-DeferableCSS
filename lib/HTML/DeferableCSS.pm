@@ -607,6 +607,11 @@ It's also spelled "Deferable".
 
 1;
 
+=head1 append:BUGS
+
+Please report any bugs in F<cssrelpreload.js> to
+L<https://github.com/filamentgroup/loadCSS/issues>.
+
 =head1 append:AUTHOR
 
 F<reset.css> comes from L<http://meyerweb.com/eric/tools/css/reset/>.

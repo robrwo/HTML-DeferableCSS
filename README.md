@@ -317,6 +317,9 @@ When submitting a bug or request, please include a test-file or a
 patch to an existing test-file that illustrates the bug or desired
 feature.
 
+Please report any bugs in `cssrelpreload.js` to
+[https://github.com/filamentgroup/loadCSS/issues](https://github.com/filamentgroup/loadCSS/issues).
+
 # AUTHOR
 
 Robert Rothenberg <rrwo@cpan.org>
