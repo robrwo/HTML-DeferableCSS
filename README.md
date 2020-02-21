@@ -202,6 +202,35 @@ of files.
 
 True if there is an ["asset\_id"](#asset_id).
 
+## log
+
+This is a code reference for logging errors and warnings:
+
+```perl
+$css->log->( $level => $message );
+```
+
+By default, this is a wrapper around [Carp](https://metacpan.org/pod/Carp) that dies when the level
+is "error", and emits a warning for everything else.
+
+You can override this so that errors are treated as warnings,
+
+```perl
+log => sub { warn $_[1] },
+```
+
+or that warnings are fatal,
+
+```perl
+log => sub { die $_[1] },
+```
+
+or even integrate this with your own logging system:
+
+```perl
+log => sub { $logger->log(@_) },
+```
+
 # METHODS
 
 ## href
