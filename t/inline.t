@@ -7,8 +7,10 @@ subtest "inline" => sub {
     my $css = HTML::DeferableCSS->new(
         css_root => 't/etc/css',
         aliases  => {
-            test => 'foo',
+            test  => 'foo',
+            reset => 1,
         },
+        inline_max => 512, # ensure reset not inlined
     );
 
     isa_ok $css, 'HTML::DeferableCSS';
@@ -18,10 +20,14 @@ subtest "inline" => sub {
         "link_html";
 
     my $cdata = $css->css_files->{test}->[0]->slurp_raw;
+    my $link  = $css->link_html('reset');
 
     is $css->inline_html('test'), "<style>$cdata</style>", "inline";
 
-    is $css->link_or_inline_html('test'), $css->inline_html('test'), "link_or_inline";
+
+    is $css->link_or_inline_html(qw[test reset]),
+        $css->inline_html('test') . $link,
+        "link_or_inline";
 
 };
 

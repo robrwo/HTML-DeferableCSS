@@ -470,17 +470,17 @@ L</cdn_links>.
 
 sub link_or_inline_html {
     my ($self, @names ) = @_;
+    my $buffer = "";
     foreach my $name (uniqstr @names) {
-        croak "missing name" unless defined $name;
-        my $file = $self->css_files->{$name};
-        croak "invalid name '$name'" unless defined $file;
+        my $file = $self->css_files->{$name} or croak "invalid name '$name'";
         if ( $file->[PATH] && ($file->[SIZE] <= $self->inline_max)) {
-            return $self->inline_html($name, $file);
+            $buffer .= $self->inline_html($name, $file);
         }
         else {
-            return $self->link_html($name, $file);
+            $buffer .= $self->link_html($name, $file);
         }
     }
+    return $buffer;
 }
 
 =method deferred_link_html
