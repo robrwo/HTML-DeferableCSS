@@ -4,6 +4,8 @@ Revision history for {{ $dist->name }}:
   [Documentation]
   - Added more notes about where the JavaScript comes from.
 
+  - Added acknowledgement to Science Photo Library.
+
 v0.2.3    2020-02-21 13:50:19+00:00 Europe/London
   [Improvements]
   - Added the ability to override error/warning behaviour.

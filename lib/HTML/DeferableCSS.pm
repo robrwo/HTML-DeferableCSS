@@ -614,6 +614,9 @@ L<https://github.com/filamentgroup/loadCSS/issues>.
 
 =head1 append:AUTHOR
 
+This module was developed from work for Science Photo Library
+L<https://www.sciencephoto.com>.
+
 F<reset.css> comes from L<http://meyerweb.com/eric/tools/css/reset/>.
 
 F<cssrelpreload.js> comes from L<https://github.com/filamentgroup/loadCSS/>.
