@@ -324,6 +324,9 @@ Please report any bugs in `cssrelpreload.js` to
 
 Robert Rothenberg <rrwo@cpan.org>
 
+This module was developed from work for Science Photo Library
+[https://www.sciencephoto.com](https://www.sciencephoto.com).
+
 `reset.css` comes from [http://meyerweb.com/eric/tools/css/reset/](http://meyerweb.com/eric/tools/css/reset/).
 
 `cssrelpreload.js` comes from [https://github.com/filamentgroup/loadCSS/](https://github.com/filamentgroup/loadCSS/).
