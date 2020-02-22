@@ -1,6 +1,8 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+
+v0.3.0    2020-02-22 14:41:19+00:00 Europe/London
   [Improvements]
   - Added check method as a wrapper around lazy attributes, but also
     to perform additional error checking.
