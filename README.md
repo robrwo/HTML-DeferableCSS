@@ -127,12 +127,8 @@ tools for that.
 This is a hash reference used internally to translate ["aliases"](#aliases)
 into the actual files or URLs.
 
-If files cannot be found, then it will throw an error, so calling this
-attribute in void context can be used to check for any errors:
-
-```
-eval { $css->css_files } or die "$@";
-```
+If files cannot be found, then it will throw an error. (See
+["check"](#check)).
 
 ## cdn\_links
 
@@ -239,10 +235,12 @@ log => sub { $logger->log(@_) },
 ## check
 
 This method instantiates lazy attributes and performs some minimal
-checks on the data.
+checks on the data.  (This should be called instead of ["css\_files"](#css_files).)
 
 It will throw an error or return false (depending on ["log"](#log)) if there
 is something wrong.
+
+This was added in v0.3.0.
 
 ## href
 
