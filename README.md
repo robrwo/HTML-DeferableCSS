@@ -25,6 +25,8 @@ my $css = HTML::DeferableCSS->new(
     },
 );
 
+$css->check or die "Something is wrong";
+
 ...
 
 print $css->deferred_link_html( qw[ jqui site ] );
@@ -233,6 +235,14 @@ log => sub { $logger->log(@_) },
 ```
 
 # METHODS
+
+## check
+
+This method instantiates lazy attributes and performs some minimal
+checks on the data.
+
+It will throw an error or return false (depending on ["log"](#log)) if there
+is something wrong.
 
 ## href
 

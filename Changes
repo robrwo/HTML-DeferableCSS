@@ -1,6 +1,10 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+  [Improvements]
+  - Added check method as a wrapper around lazy attributes, but also
+    to perform additional error checking.
+
   [Documentation]
   - Added more notes about where the JavaScript comes from.
 
