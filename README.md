@@ -171,6 +171,7 @@ links.
 This defaults to the same value as ["defer\_css"](#defer_css).
 
 ## preload\_script
+
 This is the pathname of the `cssrelpreload.js` file that will be
 embedded in the resulting code.
 

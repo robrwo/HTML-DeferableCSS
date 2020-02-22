@@ -327,6 +327,7 @@ has include_noscript => (
 );
 
 =attr preload_script
+
 This is the pathname of the F<cssrelpreload.js> file that will be
 embedded in the resulting code.
 
