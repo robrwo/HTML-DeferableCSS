@@ -1,6 +1,8 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+
+v0.3.1    2020-02-24 15:14:09+00:00 Europe/London
   [Improvements]
   - Setting an alias to an undef value now means the stylesheet will
     be ignored instead of throwing an error.

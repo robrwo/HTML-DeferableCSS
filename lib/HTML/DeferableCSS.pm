@@ -20,7 +20,7 @@ use Types::Standard qw/ Bool CodeRef HashRef Maybe Tuple /;
 
 use namespace::autoclean;
 
-our $VERSION = 'v0.3.1';
+our $VERSION = 'v0.3.2';
 
 =head1 SYNOPSIS
 
