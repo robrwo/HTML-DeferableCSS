@@ -114,7 +114,7 @@ the alias:
   my $css = HTML::DeferableCSS->new(
     aliases => {
         reset => 1,
-        gone  => 0,       # using "gone" will throw an error
+        gone  => 0,       # "gone" will be silently ignored
         one   => "1.css", #
     }
     ...
@@ -127,6 +127,13 @@ can be used:
     aliases => [ qw( foo bar } ],
     ...
   );
+
+If an alias is disabled, then it will simply be ignored, e.g.
+
+  $css->deferred_link_html('gone')
+
+Returns an empty string.  This allows you to disable a stylesheet in
+your configuration without having to remove all references to it.
 
 Absolute paths cannot be used.
 
@@ -204,7 +211,7 @@ L</check>).
 has css_files => (
     is  => 'lazy',
     isa => STRICT
-             ? HashRef [ Tuple [ Maybe[Path], NonEmptySimpleStr, PositiveOrZeroInt ] ]
+             ? HashRef [ Tuple [ Maybe[Path], Maybe[NonEmptySimpleStr], PositiveOrZeroInt ] ]
              : HashRef,
     builder => 1,
     coerce  => 1,
@@ -222,8 +229,11 @@ sub _build_css_files {
 
     my %files;
     for my $name (keys %{ $self->aliases }) {
-        my $base  = $self->aliases->{$name} or next;
-        if ($base =~ m{^(\w+:)?//}) {
+        my $base  = $self->aliases->{$name};
+        if (!$base) {
+            $files{$name} = [ undef, undef, 0 ];
+        }
+        elsif ($base =~ m{^(\w+:)?//}) {
             $files{$name} = [ undef, $base, 0 ];
         }
         else {
@@ -489,7 +499,12 @@ C<$alias>.
 
 sub link_html {
     my ( $self, $name, $file ) = @_;
-    return $self->link_template->( $self->href( $name, $file ) );
+    if (my $href = $self->href( $name, $file )) {
+        return $self->link_template->($href);
+    }
+    else {
+        return "";
+    }
 }
 
 =method inline_html
