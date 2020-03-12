@@ -304,6 +304,13 @@ depending on ["defer\_css"](#defer_css).
 
 # KNOWN ISSUES
 
+## Content-Security-Policy (CSP)
+
+If a web site configures a
+[Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
+setting to disable all inlined JavaScript, then the JavaScript shim will
+not work.
+
 ## XHTML Support
 
 This module is written for HTML5.

@@ -624,6 +624,13 @@ sub _get_file {
 
 =head1 KNOWN ISSUES
 
+=head2 Content-Security-Policy (CSP)
+
+If a web site configures a
+L<Content-Security-Policy|https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP>
+setting to disable all inlined JavaScript, then the JavaScript shim will
+not work.
+
 =head2 XHTML Support
 
 This module is written for HTML5.
