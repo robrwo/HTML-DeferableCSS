@@ -1,6 +1,11 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+  [Enhancements]
+  - Add csp_nonce attribute.  Add the nonce to the embedded script
+    element if it is set.
+
+  - Factor out inline_script method.
 
 v0.3.2    2020-03-12 13:52:53+00:00 Europe/London
   [Documentation]

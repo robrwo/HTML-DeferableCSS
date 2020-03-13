@@ -79,4 +79,35 @@ subtest "deferred_link_html with inline disabled" => sub {
 
 };
 
+subtest "deferred_link_html with nonce" => sub {
+
+    my $nonce = time;
+
+    my $css = HTML::DeferableCSS->new(
+        css_root => 't/etc/css',
+        aliases  => {
+            reset => 'reset',
+            test  => 'foo',
+        },
+        inline_max => 0,
+        csp_nonce  => $nonce,
+    );
+
+    isa_ok $css, 'HTML::DeferableCSS';
+
+    ok $css->preload_script, 'preload script exists';
+
+    my $link = $css->link_html('test');
+
+    ok my $cdata = $css->preload_script->slurp_raw, 'got script content';
+
+
+    my $html = $css->deferred_link_html('test');
+
+
+    is $html, '<link rel="preload" as="style" href="/foo.css" onload="this.onload=null;this.rel=\'stylesheet\'"><noscript>' . $link . "</noscript><script nonce=\"$nonce\">" . $cdata . '</script>',
+        'deferred_link_html';
+
+};
+
 done_testing;

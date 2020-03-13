@@ -394,6 +394,8 @@ This is useful to ensure that changes to stylesheets are picked up by
 web browsers that would otherwise use cached copies of older versions
 of files.
 
+Note that this is different from the L</csp_nonce>.
+
 =attr has_asset_id
 
 True if there is an L</asset_id>.
@@ -401,6 +403,23 @@ True if there is an L</asset_id>.
 =cut
 
 has asset_id => (
+    is        => 'ro',
+    isa       => NonEmptySimpleStr,
+    predicate => 1,
+);
+
+=attr csp_nonce
+
+This is the (random) Content Security Policy (CSP) nonce to include in
+inline JavaScript.
+
+=attr has_csp_nonce
+
+True if there is a L</csp_nonce>.
+
+=cut
+
+has csp_nonce => (
     is        => 'ro',
     isa       => NonEmptySimpleStr,
     predicate => 1,
@@ -596,11 +615,29 @@ sub deferred_link_html {
             join("", map { $self->link_template->($_) } @deferred ) .
             "</noscript>" if $self->include_noscript;
 
-        $buffer .= "<script>" .
-            $self->preload_script->slurp_raw .
-            "</script>";
-
+        $buffer .= $self->inline_script;
     }
+
+    return $buffer;
+}
+
+=method inline_script
+
+This returns the HTML markup for the inline script.
+
+=cut
+
+sub inline_script {
+    my ($self) = @_;
+
+    my $buffer = "";
+
+    my $tag =
+      $self->has_csp_nonce
+      ? sprintf( '<script nonce="%s">', $self->csp_nonce )
+      : '<script>';
+
+    $buffer .= $tag . $self->preload_script->slurp_raw . "</script>";
 
     return $buffer;
 }
