@@ -1,6 +1,8 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+
+v0.4.0    2020-05-29 23:34:41+01:00 Europe/London
   [Improvements]
   - Added simple mode option to use a simpler method without the
     loadCSS shim.
