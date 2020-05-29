@@ -30,6 +30,7 @@ our $VERSION = 'v0.3.3';
       css_root      => '/var/www/css',
       url_base_path => '/css',
       inline_max    => 512,
+      simple  => 1,
       aliases => {
         reset => 1,
         jqui  => 'jquery-ui',
@@ -60,8 +61,8 @@ to something like
 
   <link rel="preload" as="stylesheet" href="....">
 
-but this is not well supported by all web browsers. So a web page
-needs some L<JavaScript|https://github.com/filamentgroup/loadCSS>
+but this is not well supported by all web browsers.  So a web page needs
+to use some L<JavaScript|https://github.com/filamentgroup/loadCSS>
 to handle this, as well as a C<noscript> block as a fallback.
 
 This module allows you to simplify the management of stylesheets for a
@@ -378,10 +379,20 @@ preload link.
 
 
 has preload_template => (
-    is      => 'ro',
+    is      => 'lazy',
     isa     => CodeRef,
     builder => sub {
-        return sub { sprintf('<link rel="preload" as="style" href="%s" onload="this.onload=null;this.rel=\'stylesheet\'">', @_) },
+        my ($self) = @_;
+        if ($self->simple) {
+            return sub {
+                sprintf('<link rel="preload" as="style" href="%s">' .
+                        '<link rel="stylesheet" href="%s" media="print" onload="this.media=\'all\';this.onload=null;">',
+                        $_[0], $_[0])
+            }
+        }
+        else {
+            return sub { sprintf('<link rel="preload" as="style" href="%s" onload="this.onload=null;this.rel=\'stylesheet\'">', $_[0]) };
+        }
     },
 );
 
@@ -439,6 +450,24 @@ has log => (
             carp $message;
         };
     },
+);
+
+=attr simple
+
+When true, this enables a simpler method of using deferable CSS,
+without the need for the C<loadCSS> script.
+
+It is false by default, for backwards compatability. But it is
+recommended that you set this to true.
+
+See L<https://www.filamentgroup.com/lab/load-css-simpler/>.
+
+=cut
+
+has simple => (
+    is      => 'ro',
+    isa     => Bool,
+    default => 0,
 );
 
 =method check
@@ -598,7 +627,7 @@ sub deferred_link_html {
 
         $buffer .= "<script>" .
             $self->preload_script->slurp_raw .
-            "</script>";
+            "</script>" unless $self->simple;
 
     }
 
