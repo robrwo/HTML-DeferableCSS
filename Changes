@@ -1,6 +1,8 @@
 Revision history for {{ $dist->name }}:
 
 {{$NEXT}}
+  [Documentation]
+  - Added note when simple attribute was added.
 
 v0.4.0    2020-05-29 23:34:41+01:00 Europe/London
   [Improvements]

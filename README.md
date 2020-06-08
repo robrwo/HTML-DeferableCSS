@@ -251,6 +251,8 @@ recommended that you set this to true.
 
 See [https://www.filamentgroup.com/lab/load-css-simpler/](https://www.filamentgroup.com/lab/load-css-simpler/).
 
+This attribute was added in v0.4.0.
+
 # METHODS
 
 ## check

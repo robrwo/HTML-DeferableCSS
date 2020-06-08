@@ -462,6 +462,8 @@ recommended that you set this to true.
 
 See L<https://www.filamentgroup.com/lab/load-css-simpler/>.
 
+This attribute was added in v0.4.0.
+
 =cut
 
 has simple => (
